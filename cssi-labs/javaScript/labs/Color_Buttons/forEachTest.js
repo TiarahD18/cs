@@ -12,26 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-let currentlily = 1;
+// Use querySelector to store the div in a variable.
 
-let frogger = document.querySelector('#frog');
+let txt = " ";
+let a = [1,2,3,4,5];
+let b = [];
 
-frogger.addEventListener('click', (e) =>{
-  console.log("hop");
+function test1(value, index, array)
+{
+  txt = txt + value + " ";
 }
 
-frog.addEventListener('click', e=>{
-  frog.style.left = "33.5%";
-});
-
-frog.addEventListener('click', e=>{
-  frog.style.up = "40%"
+function test2(value, index, array)
+{
+  txt = txt + index + " ";
 }
 
-frogger.addEventListener(/* Insert type of event are we listening for */, function(){
-// Insert what should happen when you click on the frog!
-
-
-
-
-});
+function test3(value, index, array)
+{
+  if(index + 1 < array.length)
+  {
+    b.push(value + array[index + 1]);
+  }
+}
