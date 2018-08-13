@@ -33,35 +33,51 @@
 import webapp2
 import os
 import random
-
+import jinja2
 
 def get_fortune():
     #add a list of fortunes to the empty fortune_list array
-    fortune_list=['fortune1', 'fortune2']
+    fortune_list=['You will win the lottery', 'You will meet someone important', 'You are blessed', 'You will be forever healthy', 'Your life will be full of happy memories']
     #use the random library to return a random element from the array
-    random_fortune =
+    random_fortune = fortune_list[random.randint(0,1)]
     return(random_fortune)
 
 
 #remember, you can get this by searching for jinja2 google app engine
-jinja_current_directory = "insert jinja2 environment variable here"
+jinja_current_directory = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
 
 class FortuneHandler(webapp2.RequestHandler):
+# In part 2, instead of returning this string,
+# make a function call that returns a random fortune.
     def get(self):
-        # In part 2, instead of returning this string,
-        # make a function call that returns a random fortune.
-        self.response.write('a response from the FortuneHandler')
+        results_template = jinja_current_directory.get_template('templates/fortune-start.html')
+        self.response.write(results_template.render())
     #add a post method
-    #def post(self):
+    def post(self):
+        fortune = get_fortune()
+        results_template = jinja_current_directory.get_template('templates/fortune-results.html')
+        user_astro_sign = self.request.get("user_astrological_sign")
+        resultDictionary = {"sign":user_astro_sign, "fortune": fortune}
+        self.response.write(results_template.render(resultDictionary))
+
+
 
 class HelloHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('Hello World. Welcome to the root route of my app')
+
+class GoodbyeHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write("My response is Goodbye World.")
 
 #the route mapping
 app = webapp2.WSGIApplication([
     #this line routes the main url ('/')  - also know as
     #the root route - to the Fortune Handler
     ('/', HelloHandler),
-    ('/predict', FortuneHandler) #maps '/predict' to the FortuneHandler
+    ('/predict', FortuneHandler), #maps '/predict' to the FortuneHandler
+    ('/farewell', GoodbyeHandler),
 ], debug=True)
